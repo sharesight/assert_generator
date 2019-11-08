@@ -1,0 +1,33 @@
+lib = File.expand_path("lib", __dir__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require "assert_generator/version"
+
+Gem::Specification.new do |spec|
+  spec.name          = "assert_generator"
+  spec.version       = AssertGenerator::VERSION
+  spec.authors       = ["Richard Parratt"]
+  spec.email         = ["richard.parratt@sharesight.co.nz"]
+
+  spec.summary       = %q{An assert generating gem.}
+  spec.description   = <<~END_DESC
+    Generate assert code from a result inside a unit or integration test.
+    This is useful if you have code that you've spiked or eyeballed as 'working' and you'd like to produce some assertions,
+    without editing the output of pretty-inspect manually or making it all up.
+END_DESC
+  spec.license       = "MIT"
+
+  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
+
+  spec.metadata["source_code_uri"] = "https://github.com/sharesight/assert_generator"
+
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  spec.files         = ['lib/assert_generator.rb', 'lib/assert_generator/version.rb']
+  spec.require_paths = ["lib"]
+
+  spec.add_development_dependency "bundler", "~> 2.0"
+  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency "shoulda"
+  spec.add_development_dependency 'mocha'
+end

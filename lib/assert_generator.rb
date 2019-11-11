@@ -86,24 +86,27 @@ module AssertGenerator
     def generate_assert_drillable_item(v, make_accessor, *accessor_params)
       accessor = make_accessor.call(*accessor_params)
       unless drillable_object(v)
-        if v.is_a?(true.class)
+        if v.nil?
+          out "assert_nil #{accessor}"
+        elsif v.is_a?(true.class)
           out "assert #{accessor}"
         elsif v.is_a?(false.class)
           out "refute #{accessor}"
+
+        elsif v.is_a?(DateTime) || (defined?(ActiveSupport::TimeWithZone) && v.is_a?(ActiveSupport::TimeWithZone))
+          out "assert_equal DateTime.new(#{v.year}, #{v.month}, #{v.day}, #{v.hour}, #{v.min}, #{v.sec}, '#{v.zone}'), #{accessor}"
         elsif v.is_a?(Date)
           if relative_dates
             date_diff = v - relative_date_today
             if date_diff.to_i == 0
               out "assert_equal #{relative_dates}, #{accessor}"
             else
-              out "assert_equal #{relative_dates} - #{date_diff}.days, #{accessor}"
+              out "assert_equal #{relative_dates} + #{date_diff}.days, #{accessor}"
             end
           else
             out "assert_equal Date.new(#{v.year}, #{v.month}, #{v.day}), #{accessor}"
           end
 
-        elsif v.is_a?(DateTime) || (defined?(ActiveSupport::TimeWithZone) && v.is_a?(ActiveSupport::TimeWithZone))
-          out "assert_equal DateTime.new(#{v.year}, #{v.month}, #{v.day}, #{v.hour}, #{v.min}, #{v.sec}, '#{v.zone}'), #{accessor}"
         else
           out "assert_equal #{v.inspect}, #{make_accessor.call(*accessor_params)}"
         end

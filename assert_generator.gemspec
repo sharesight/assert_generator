@@ -30,4 +30,6 @@ END_DESC
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "shoulda"
   spec.add_development_dependency 'mocha'
+  # spec.add_development_dependency 'pry-byebug'
+  spec.add_development_dependency 'simplecov'
 end

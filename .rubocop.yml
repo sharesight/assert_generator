@@ -1,0 +1,55 @@
+#
+# Execute with:
+#   rubocop
+# This will use .rubocop_todo.yml to skip existing issues
+#
+
+# This is the default configuration file. Enabling and disabling is configured
+# in separate files. This file adds all other parameters apart from Enabled.
+
+inherit_from:
+  - .rubocop_defaults.yml
+#  - .rubocop_todo.yml
+
+Layout/AlignArguments:
+  Enabled: false
+
+Layout/EmptyLineBetweenDefs:
+  Enabled: false
+
+Style/RescueStandardError:
+  Enabled: false
+
+Naming/HeredocDelimiterNaming:
+  Enabled: false
+
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
+
+Style/CommentedKeyword:
+  Enabled: false
+
+Style/ExpandPathArguments:
+  Enabled: false
+
+Style/FloatDivision:
+  Enabled: false
+
+Style/For:
+  Enabled: false
+
+Style/FormatStringToken:
+  Exclude:
+    - 'config/routes/web.rb'
+
+Style/GuardClause:
+  Enabled: false
+
+Style/InverseMethods:
+  Enabled: false
+
+Style/MultilineIfModifier:
+  Enabled: false
+
+Style/YodaCondition:
+  Enabled: false

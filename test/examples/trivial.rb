@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 require 'assert_generator'
@@ -7,8 +9,8 @@ class Trivial < MiniTest::Test
     setup do
       n = 2 + 3
       @res = {
-          number: n,
-          text: "(2 + 3) = #{n}"
+        number: n,
+        text: "(2 + 3) = #{n}"
       }
     end
 
@@ -17,7 +19,7 @@ class Trivial < MiniTest::Test
     end
 
     should 'produce some code as expected' do
-      AssertGenerator::Klass.any_instance.expects(:out).with("assert_equal 5, @res[:number]").once
+      AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 5, @res[:number]').once
       AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal "(2 + 3) = 5", @res[:text]').once
 
       AssertGenerator.generate_asserts(@res, '@res')
@@ -25,8 +27,7 @@ class Trivial < MiniTest::Test
 
     should 'use generated code' do
       assert_equal 5, @res[:number]
-      assert_equal "(2 + 3) = 5", @res[:text]
+      assert_equal '(2 + 3) = 5', @res[:text]
     end
   end
 end
-

@@ -1,0 +1,24 @@
+# Generic config to build a gem
+version: 2
+
+# Install Ruby dependencies
+run: &bundle_install
+  name: Bundle Install
+  command: 'gem install bundler && bundle --version && bundle install'
+
+jobs:
+  build:
+
+    docker:
+      - image: circleci/ruby:2.6.5
+
+    steps:
+      - checkout
+
+      - run: *bundle_install
+
+      - run: bundle exec rubocop
+
+      - run:
+          name: 'Test gem'
+          command: "bundle exec rake test"

@@ -16,8 +16,6 @@ Gem::Specification.new do |spec|
 END_DESC
   spec.license       = "MIT"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-
   spec.metadata["source_code_uri"] = "https://github.com/sharesight/assert_generator"
 
   # Specify which files should be added to the gem when it is released.

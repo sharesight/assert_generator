@@ -60,11 +60,11 @@ DEPENDENCIES
   assert_generator!
   bundler (~> 2.0)
   minitest (~> 5.0)
-  mocha
+  mocha (~> 1.9)
   rake (~> 10.0)
-  rubocop
-  shoulda
-  simplecov
+  rubocop (~> 0.76)
+  shoulda (~> 3.6)
+  simplecov (~> 0.17, >= 0.17.1)
 
 BUNDLED WITH
    2.0.2

@@ -62,6 +62,35 @@ class AssertGeneratorTest < Minitest::Test
       end
     end
 
+    context 'with a hash' do
+      should 'generate correct asserts with string keys' do
+        hash = { 'a' => 1, 'z' => { 'q' => 100, 'p' => 200 } }
+        AssertGenerator::Klass.any_instance.expects(:out).with("assert_equal 1, hash['a']").once
+        AssertGenerator::Klass.any_instance.expects(:out).with("assert_equal 100, hash['z']['q']").once
+        AssertGenerator::Klass.any_instance.expects(:out).with("assert_equal 200, hash['z']['p']").once
+
+        AssertGenerator.generate_asserts(hash, 'hash')
+      end
+
+      should 'generate correct asserts with symbolic keys' do
+        hash = { a: 1, z: { q: 100, p: 200 } }
+        AssertGenerator::Klass.any_instance.expects(:out).with("assert_equal 1, hash[:a]").once
+        AssertGenerator::Klass.any_instance.expects(:out).with("assert_equal 100, hash[:z][:q]").once
+        AssertGenerator::Klass.any_instance.expects(:out).with("assert_equal 200, hash[:z][:p]").once
+
+        AssertGenerator.generate_asserts(hash, 'hash')
+      end
+
+      should 'generate correct asserts with mixed keys' do
+        hash = { a: 1, z: { q: 100, 'p' => 200 } }
+        AssertGenerator::Klass.any_instance.expects(:out).with("assert_equal 1, hash[:a]").once
+        AssertGenerator::Klass.any_instance.expects(:out).with("assert_equal 100, hash[:z][:q]").once
+        AssertGenerator::Klass.any_instance.expects(:out).with("assert_equal 200, hash[:z]['p']").once
+
+        AssertGenerator.generate_asserts(hash, 'hash')
+      end
+    end
+
     context 'with nested array and hashes' do
       should 'assert count and members' do
         mixed = { a: [1, 2, { x: 100, y: 200 }], f: 1.234 }

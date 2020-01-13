@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.2 `(13/01/2020)`
+
+ * properly handle string and symbolic keys on hashes
+ 
 ## 0.1.1 `(18/11/2019)`
 
  * Rubygems release and add changelog

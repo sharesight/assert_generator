@@ -80,7 +80,10 @@ module AssertGenerator
 
     def generate_asserts_hash(h, p)
       h.each do |k, v|
-        generate_assert_drillable_item(v, ->(sym) { "#{p}[:#{sym}]" }, k)
+        generate_assert_drillable_item(v, ->(key) do
+          key_literal = key.is_a?(Symbol) ? ":#{key}" : "'#{key}'"
+          "#{p}[#{key_literal}]"
+        end, k)
       end
     end
 

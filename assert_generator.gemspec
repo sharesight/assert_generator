@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
-  spec.files         = ['lib/assert_generator.rb', 'lib/assert_generator/version.rb']
+  spec.files         = Dir['lib/*.rb']
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 2.0'

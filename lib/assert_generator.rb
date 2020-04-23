@@ -58,8 +58,8 @@ module AssertGenerator
         return self
       end
 
-      if defined?(ActiveRecord::Base) && source.is_a?(ActiveRecord::Base)
-        generate_asserts_ar(source, source_expr)
+      if source.respond_to?(:attributes)
+        generate_asserts_attributes(source, source_expr)
         return self
       end
 
@@ -72,7 +72,8 @@ module AssertGenerator
       self
     end
 
-    def generate_asserts_ar(h, p)
+    # Active Record, or anything else with an attributes hash
+    def generate_asserts_attributes(h, p)
       h.attributes.each do |k, v|
         generate_assert_drillable_item(v, ->(meth) { "#{p}.#{meth}" }, k)
       end

@@ -7,6 +7,20 @@ module ActiveRecord
   class Base; end
 end
 
+class TestWithAttributes
+  def a
+    'a'
+  end
+
+  def b
+    'b'
+  end
+
+  def attributes
+    { a: a, b: b }
+  end
+end
+
 class AssertGeneratorTest < Minitest::Test
   context 'gem' do
     should 'have a version number' do
@@ -37,7 +51,7 @@ class AssertGeneratorTest < Minitest::Test
 
       should 'adjust dates when relative_dates given' do
         date = Date.today + 15
-        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal Date.today + 15/1.days, date').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal Date.today + 15.days, date').once
 
         AssertGenerator.generate_asserts(relative_dates: 'Date.today') { 'date' }
       end
@@ -59,6 +73,16 @@ class AssertGeneratorTest < Minitest::Test
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 3, array[2]').once
 
         AssertGenerator.generate_asserts(array, 'array')
+      end
+    end
+
+    context 'with a range' do
+      should 'assert first and last' do
+        range = (1..4)
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 1, range.first').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 4, range.last').once
+
+        AssertGenerator.generate_asserts { 'range' }
       end
     end
 
@@ -93,7 +117,7 @@ class AssertGeneratorTest < Minitest::Test
 
     context 'with nested array and hashes' do
       should 'assert count and members' do
-        mixed = { a: [1, 2, { x: 100, y: 200 }], f: 1.234 }
+        mixed = { a: [1, 2, { x: 100, y: 200 }], f: 1.234, r: (5..7) }
 
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 3, mixed[:a].count').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 1, mixed[:a][0]').once
@@ -101,6 +125,8 @@ class AssertGeneratorTest < Minitest::Test
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 100, mixed[:a][2][:x]').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 200, mixed[:a][2][:y]').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 1.234, mixed[:f]').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 5, mixed[:r].first').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 7, mixed[:r].last').once
 
         AssertGenerator.generate_asserts(mixed, 'mixed')
       end
@@ -127,6 +153,17 @@ class AssertGeneratorTest < Minitest::Test
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 200, ar.b').once
 
         AssertGenerator.generate_asserts(ar, 'ar')
+      end
+    end
+
+    context 'with a class that provides attributes' do
+      should 'assert attributes' do
+        c = TestWithAttributes.new
+
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal "a", c.a').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal "b", c.b').once
+
+        AssertGenerator.generate_asserts(c, 'c')
       end
     end
 

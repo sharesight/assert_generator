@@ -59,7 +59,13 @@ module AssertGenerator
       end
 
       if source.respond_to?(:attributes)
+        # AR or something that quacks like it
         generate_asserts_attributes(source, source_expr)
+        return self
+      end
+
+      if source.is_a?(Range)
+        generate_asserts_range(source, source_expr)
         return self
       end
 
@@ -96,25 +102,31 @@ module AssertGenerator
       end
     end
 
+    def generate_asserts_range(a, p)
+      generate_assert_drillable_item(a.first, ->(_x) { "#{p}.first" }, p)
+      generate_assert_drillable_item(a.last, ->(_x) { "#{p}.last" }, p)
+    end
+
     def generate_assert_drillable_item(v, make_accessor, *accessor_params)
       accessor = make_accessor.call(*accessor_params)
-      if drillable_object(v)
-        generate_asserts(v, accessor, nil, nil)
-      else
-        if v.nil?
-          out "assert_nil #{accessor}"
-        elsif v.is_a?(true.class)
-          out "assert #{accessor}"
-        elsif v.is_a?(false.class)
-          out "refute #{accessor}"
 
-        elsif v.is_a?(DateTime) || (defined?(ActiveSupport::TimeWithZone) && v.is_a?(ActiveSupport::TimeWithZone))
-          generate_date_time_assert(v, accessor)
-        elsif v.is_a?(Date)
-          generate_date_assert(v, accessor)
-        else
-          out "assert_equal #{v.inspect}, #{make_accessor.call(*accessor_params)}"
-        end
+      if drillable_object(v)
+        return generate_asserts(v, accessor, nil, nil)
+      end
+
+      if v.nil?
+        out "assert_nil #{accessor}"
+      elsif v.is_a?(true.class)
+        out "assert #{accessor}"
+      elsif v.is_a?(false.class)
+        out "refute #{accessor}"
+
+      elsif v.is_a?(DateTime) || (defined?(ActiveSupport::TimeWithZone) && v.is_a?(ActiveSupport::TimeWithZone))
+        generate_date_time_assert(v, accessor)
+      elsif v.is_a?(Date)
+        generate_date_assert(v, accessor)
+      else
+        out "assert_equal #{v.inspect}, #{make_accessor.call(*accessor_params)}"
       end
     end
 
@@ -123,7 +135,7 @@ module AssertGenerator
     end
 
     def drillable_object(v)
-      v.is_a?(Enumerable) || (defined?(ActiveRecord::Base) && v.is_a?(ActiveRecord::Base))
+      v.is_a?(Enumerable) || v.respond_to?(:attributes)
     end
 
     def generate_date_assert(v, accessor)
@@ -132,7 +144,7 @@ module AssertGenerator
         if date_diff.to_i == 0
           out "assert_equal #{relative_dates}, #{accessor}"
         else
-          out "assert_equal #{relative_dates} + #{date_diff}.days, #{accessor}"
+          out "assert_equal #{relative_dates} #{date_diff.to_i < 0 ? '-' : '+'} #{date_diff.to_i.abs}.days, #{accessor}"
         end
       else
         out "assert_equal Date.new(#{v.year}, #{v.month}, #{v.day}), #{accessor}"

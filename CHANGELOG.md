@@ -3,6 +3,7 @@
 ## 0.1.3 TBD
 
  * call methods on any class that defines an `attributes` hash
+ * support Range objects correctly
 
 ## 0.1.2 `(13/01/2020)`
 

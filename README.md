@@ -51,7 +51,9 @@ which you can then paste into your code, and the asserts will pass.
 
 #### Arrays
 `t = [1,2,3]; AssertGenerator.generate_asserts(t, 't')`
+
 generates
+
 ```
 assert_equal 3, t.count
 assert_equal 1, t[0]
@@ -59,9 +61,18 @@ assert_equal 2, t[1]
 assert_equal 3, t[2]
 ```
 
+#### Ranges
+`t = (4..7); AssertGenerator.generate_asserts { 't' }`
+
+generates
+
+```
+assert_equal 4, t.first
+assert_equal 7, t.last
+```
+
 #### Hashes
 
-As above:
 ```
 h = { a: 2 }
 AssertGenerator.generate_asserts(h, 'h')
@@ -92,7 +103,7 @@ AssertGenerator.generate_asserts(relative_dates: 'Date.new(2019,11,1)') { 'd' }
 ```
 generates:
 ```
-assert_equal Date.new(2019,11,1) - 9/1.days, d
+assert_equal Date.new(2019,11,1) - 9.days, d
 ```
  
 ### Active Record
@@ -101,6 +112,8 @@ If you have an AR object `thing`, then `AssertGenerator.generate_asserts(thing, 
 will produce assertions for each attribute of the object.
 
 Note that index values and similar may well be wrong, unless you are using fixtures with a specified id. 
+
+Also, any class which quacks like AR by defining an `attributes` hash will be handled as for AR, allowing arbitrary classes to be tested.
 
 ## TODO
 

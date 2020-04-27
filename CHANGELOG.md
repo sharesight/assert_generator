@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.1.3 TBD
+## 0.1.3 `(28/04/2020)`
 
  * call methods on any class that defines an `attributes` hash
  * support Range objects correctly

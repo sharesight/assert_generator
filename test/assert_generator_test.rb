@@ -124,7 +124,7 @@ class AssertGeneratorTest < Minitest::Test
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 2, mixed[:a][1]').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 100, mixed[:a][2][:x]').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 200, mixed[:a][2][:y]').once
-        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 1.234, mixed[:f]').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal_d 1.23, mixed[:f]').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 5, mixed[:r].first').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 7, mixed[:r].last').once
 

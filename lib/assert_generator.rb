@@ -113,7 +113,7 @@ module AssertGenerator
       accessor = make_accessor.call(*accessor_params)
 
       if drillable_object(v)
-        return generate_asserts(v, accessor, nil, nil, nil)
+        return generate_asserts(v, accessor, relative_dates, numeric_precision, nil)
       end
 
       if v.nil?

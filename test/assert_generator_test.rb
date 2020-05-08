@@ -174,7 +174,8 @@ class AssertGeneratorTest < Minitest::Test
           t: true,
           f: false,
           d: Date.new(2019, 1, 1),
-          dt: DateTime.new(2018, 3, 1, 17, 0, 0)
+          dt: DateTime.new(2018, 3, 1, 17, 0, 0),
+          fl: 3.142
         }
 
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_nil hash_all[:n]').once
@@ -184,8 +185,26 @@ class AssertGeneratorTest < Minitest::Test
           .with('assert_equal Date.new(2019, 1, 1), hash_all[:d]').once
         AssertGenerator::Klass.any_instance.expects(:out) \
           .with("assert_equal DateTime.new(2018, 3, 1, 17, 0, 0, '+00:00'), hash_all[:dt]").once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal_d 3.14, hash_all[:fl]').once
 
         AssertGenerator.generate_asserts(hash_all, 'hash_all')
+      end
+    end
+
+    context 'with floats' do
+      should 'assert with configured precision' do
+        hash = {
+            fl: 3.14159
+        }
+
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal_d 3.14, hash[:fl]').once
+        AssertGenerator.generate_asserts(hash, 'hash')
+
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 3.14159, hash[:fl]').once
+        AssertGenerator.generate_asserts(float_precision: nil) { 'hash' }
+
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal_d 3.142, hash[:fl], 3').once
+        AssertGenerator.generate_asserts(float_precision: 3) { 'hash' }
       end
     end
   end

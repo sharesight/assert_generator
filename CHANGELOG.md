@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.4 `(08/05/2020)`
+
+ * support float precision
+ 
 ## 0.1.3 `(28/04/2020)`
 
  * call methods on any class that defines an `attributes` hash

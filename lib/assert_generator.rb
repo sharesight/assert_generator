@@ -21,14 +21,14 @@ module AssertGenerator
   #     - use with date dependent fixtures
   #   @yield a block which when evaluated returns the source object
   #
-  def self.generate_asserts(source = nil, source_expr = nil, relative_dates: nil, float_precision: 2, &block)
-    AssertGenerator::Klass.new.send(:generate_asserts, source, source_expr, relative_dates, float_precision, block)
+  def self.generate_asserts(source = nil, source_expr = nil, relative_dates: nil, numeric_precision: 2, &block)
+    AssertGenerator::Klass.new.send(:generate_asserts, source, source_expr, relative_dates, numeric_precision, block)
   end
 
   class Klass
-    attr_accessor :relative_dates, :relative_date_today, :float_precision
+    attr_accessor :relative_dates, :relative_date_today, :numeric_precision
 
-        def generate_asserts(source, source_expr, relative_dates, float_precision, block)
+    def generate_asserts(source, source_expr, relative_dates, numeric_precision, block)
       if block
         unless !defined?(Rails) || Rails.env.test?
           raise 'AssertGenerator must only be used in the test context'
@@ -53,9 +53,9 @@ module AssertGenerator
         # rubocop:enable Security/Eval
       end
 
-      self.float_precision = float_precision
+      self.numeric_precision = numeric_precision
 
-          if source.is_a?(Hash)
+      if source.is_a?(Hash)
         generate_asserts_hash(source, source_expr)
         return self
       end
@@ -127,8 +127,8 @@ module AssertGenerator
         generate_date_time_assert(v, accessor)
       elsif v.is_a?(Date)
         generate_date_assert(v, accessor)
-      elsif v.is_a?(Float)
-        generate_float_assert(v, accessor)
+      elsif v.is_a?(Float) || v.is_a?(BigDecimal)
+        generate_numeric_assert(v, accessor)
       else
         out "assert_equal #{v.inspect}, #{make_accessor.call(*accessor_params)}"
       end
@@ -160,11 +160,11 @@ module AssertGenerator
              + "#{v.hour}, #{v.min}, #{v.sec}, '#{v.zone}'), #{accessor}"
     end
 
-    def generate_float_assert(v, accessor)
-      if float_precision
-        assert_code = "assert_equal_d #{v.round(float_precision)}, #{accessor}"
-        if float_precision != 2
-          assert_code += ", #{float_precision}"
+    def generate_numeric_assert(v, accessor)
+      if numeric_precision
+        assert_code = "assert_equal_d #{v.to_f.round(numeric_precision)}, #{accessor}"
+        if numeric_precision != 2
+          assert_code += ", #{numeric_precision}"
         end
       else
         assert_code = "assert_equal #{v}, #{accessor}"

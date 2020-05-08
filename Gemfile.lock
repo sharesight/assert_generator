@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    assert_generator (0.1.3)
+    assert_generator (0.1.4)
 
 GEM
   remote: https://rubygems.org/

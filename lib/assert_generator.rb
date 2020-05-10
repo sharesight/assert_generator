@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'date'
+require 'binding_of_caller'
 
 module AssertGenerator
   # Generate asserts based on some actual output from an object under test
@@ -45,11 +46,9 @@ module AssertGenerator
       end
 
       if relative_dates
-        raise 'relative_dates needs block syntax' unless block
-
         self.relative_dates = relative_dates
         # rubocop:disable Security/Eval
-        self.relative_date_today = eval(relative_dates, block.binding)
+        self.relative_date_today = eval(relative_dates, block&.binding ||  binding.of_caller(1))
         # rubocop:enable Security/Eval
       end
 

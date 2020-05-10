@@ -130,6 +130,16 @@ class AssertGeneratorTest < Minitest::Test
 
         AssertGenerator.generate_asserts(mixed, 'mixed')
       end
+
+      should 'adjust dates when relative_dates given' do
+        nested = { a: [Date.today - 10, Date.today] }
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 2, nested[:a].count').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal Date.today - 10.days, nested[:a][0]').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal Date.today, nested[:a][1]').once
+
+        AssertGenerator.generate_asserts(relative_dates: 'Date.today') { 'nested' }
+      end
+
     end
 
     context 'with an enumerable' do

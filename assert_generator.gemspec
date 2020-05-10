@@ -33,4 +33,5 @@ Gem::Specification.new do |spec|
   # spec.add_development_dependency 'pry-byebug'
   spec.add_development_dependency 'rubocop', '~> 0.76'
   spec.add_development_dependency 'simplecov', '~> 0.17', '>= 0.17.1'
+  spec.add_development_dependency 'binding_of_caller'
 end

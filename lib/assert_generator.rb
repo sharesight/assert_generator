@@ -20,7 +20,8 @@ module AssertGenerator
   #     to access the object
   #   @param relative_dates [String] adjust dates to be relative to the supplied date as a string expression
   #     - use with date dependent fixtures
-  #   @param numeric_precision [Integer] compare BigDecimal and Float using this level of precision in `assert_equal_d`, set to nil for an `assert_equal` compare
+  #   @param numeric_precision [Integer] compare BigDecimal and Float using this level of precision
+  #     in `assert_equal_d`, set to nil for an `assert_equal` compare
   #   @yield a block which when evaluated returns the source object
   #
   def self.generate_asserts(source = nil, source_expr = nil, relative_dates: nil, numeric_precision: 2, &block)
@@ -123,7 +124,7 @@ module AssertGenerator
       elsif v.is_a?(false.class)
         out "refute #{accessor}"
 
-      elsif v.is_a?(DateTime) || (defined?(ActiveSupport::TimeWithZone) && v.is_a?(ActiveSupport::TimeWithZone))
+      elsif is_timey?(v)
         generate_date_time_assert(v, accessor)
       elsif v.is_a?(Date)
         generate_date_assert(v, accessor)
@@ -171,6 +172,12 @@ module AssertGenerator
       end
 
       out assert_code
+    end
+
+    private
+
+    def is_timey?(v)
+      v.is_a?(DateTime) || (defined?(ActiveSupport::TimeWithZone) && v.is_a?(ActiveSupport::TimeWithZone))
     end
   end
 end

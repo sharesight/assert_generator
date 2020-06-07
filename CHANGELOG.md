@@ -2,8 +2,9 @@
 
 ## 0.1.4 `(08/05/2020)`
 
- * support float precision
- 
+ * Compare BigDecimal and Float using `assert_equal_d` at a supplied precision (default 2dp)
+ * Generate `relative_dates` compares correctly
+  
 ## 0.1.3 `(28/04/2020)`
 
  * call methods on any class that defines an `attributes` hash

@@ -21,7 +21,7 @@ module AssertGenerator
   #   @param relative_dates [String] adjust dates to be relative to the supplied date as a string expression
   #     - use with date dependent fixtures
   #   @param numeric_precision [Integer] compare BigDecimal and Float using this level of precision
-  #     in `assert_equal_d`, set to nil for an `assert_equal` compare
+  #     in `assert_in_delta, set to nil for an `assert_equal` compare
   #   @yield a block which when evaluated returns the source object
   #
   def self.generate_asserts(source = nil, source_expr = nil, relative_dates: nil, numeric_precision: 2, &block)
@@ -163,10 +163,8 @@ module AssertGenerator
 
     def generate_numeric_assert(v, accessor)
       if numeric_precision
-        assert_code = "assert_equal_d #{v.to_f.round(numeric_precision)}, #{accessor}"
-        if numeric_precision != 2
-          assert_code += ", #{numeric_precision}"
-        end
+        delta = 10.0 ** -numeric_precision
+        assert_code = "assert_in_delta #{v.to_f.round(numeric_precision)}, #{accessor}, #{delta}"
       else
         assert_code = "assert_equal #{v}, #{accessor}"
       end

@@ -124,7 +124,7 @@ class AssertGeneratorTest < Minitest::Test
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 2, mixed[:a][1]').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 100, mixed[:a][2][:x]').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 200, mixed[:a][2][:y]').once
-        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal_d 1.23, mixed[:f]').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_in_delta 1.23, mixed[:f], 0.01').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 5, mixed[:r].first').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 7, mixed[:r].last').once
 
@@ -195,7 +195,7 @@ class AssertGeneratorTest < Minitest::Test
           .with('assert_equal Date.new(2019, 1, 1), hash_all[:d]').once
         AssertGenerator::Klass.any_instance.expects(:out) \
           .with("assert_equal DateTime.new(2018, 3, 1, 17, 0, 0, '+00:00'), hash_all[:dt]").once
-        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal_d 3.14, hash_all[:fl]').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_in_delta 3.14, hash_all[:fl], 0.01').once
 
         AssertGenerator.generate_asserts(hash_all, 'hash_all')
       end
@@ -208,16 +208,16 @@ class AssertGeneratorTest < Minitest::Test
             dec: BigDecimal('9.8765')
         }
 
-        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal_d 3.14, hash[:fl]').once
-        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal_d 9.88, hash[:dec]').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_in_delta 3.14, hash[:fl], 0.01').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_in_delta 9.88, hash[:dec], 0.01').once
         AssertGenerator.generate_asserts(hash, 'hash')
 
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 3.14159, hash[:fl]').once
         AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal 0.98765e1, hash[:dec]').once
         AssertGenerator.generate_asserts(numeric_precision: nil) { 'hash' }
 
-        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal_d 3.142, hash[:fl], 3').once
-        AssertGenerator::Klass.any_instance.expects(:out).with('assert_equal_d 9.877, hash[:dec], 3').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_in_delta 3.142, hash[:fl], 0.001').once
+        AssertGenerator::Klass.any_instance.expects(:out).with('assert_in_delta 9.877, hash[:dec], 0.001').once
         AssertGenerator.generate_asserts(numeric_precision: 3) { 'hash' }
       end
     end

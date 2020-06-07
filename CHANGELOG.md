@@ -2,7 +2,8 @@
 
 ## 0.1.4 `(08/05/2020)`
 
- * Compare BigDecimal and Float using `assert_equal_d` at a supplied precision (default 2dp)
+ * Compare BigDecimal and Float using `assert_in_delta` at a 
+    supplied precision (default 2dp => 0.01)
  * Generate `relative_dates` compares correctly
   
 ## 0.1.3 `(28/04/2020)`

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.1.5 `(25/09/2020)`
+ * Bump json for security issue
+ 
 ## 0.1.4 `(08/05/2020)`
 
  * Compare BigDecimal and Float using `assert_in_delta` at a 

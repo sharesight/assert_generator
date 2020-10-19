@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     assert_generator (0.1.5)
+      binding_of_caller
 
 GEM
   remote: https://rubygems.org/
@@ -61,7 +62,6 @@ PLATFORMS
 
 DEPENDENCIES
   assert_generator!
-  binding_of_caller
   bundler (~> 2.0)
   minitest (~> 5.0)
   mocha (~> 1.9)

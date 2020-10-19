@@ -25,13 +25,14 @@ Gem::Specification.new do |spec|
   spec.files         = Dir['lib/*.rb']
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'binding_of_caller'
+
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'minitest', '~> 5.0'
   spec.add_development_dependency 'mocha', '~> 1.9'
   spec.add_development_dependency 'rake', '>= 13.0'
   spec.add_development_dependency 'shoulda', '~> 3.6'
   # spec.add_development_dependency 'pry-byebug'
-  spec.add_development_dependency 'binding_of_caller'
   spec.add_development_dependency 'rubocop', '~> 0.76'
   spec.add_development_dependency 'simplecov', '~> 0.17', '>= 0.17.1'
 end

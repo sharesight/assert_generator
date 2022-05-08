@@ -10,7 +10,7 @@ jobs:
   build:
 
     docker:
-      - image: circleci/ruby:2.6.5
+      - image: cimg/ruby:2.6.5
 
     steps:
       - checkout
